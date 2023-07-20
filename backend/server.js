@@ -2,9 +2,11 @@ const express = require('express')
 const dotenv = require('dotenv')
 const cors = require('cors')
 const { chats } = require('./data/data')
-
+const connectDB = require('./config/db')
+const colors = require('colors')
 
 dotenv.config()
+connectDB()
 const app = express()
 app.use(cors({ origin: process.env.CLIENT_PORT, credentials: true }))
 
@@ -23,4 +25,4 @@ app.get('/api/chat/:id', (req, res) => {
 })
 
 const PORT = process.env.PORT || 6000
-app.listen(PORT, console.log(`Server is running at post ${PORT}`))
+app.listen(PORT, console.log(`Server is running at post ${PORT}`.yellow.bold))
