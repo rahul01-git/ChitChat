@@ -35,6 +35,7 @@ const SignUp = () => {
         isClosable: true,
         position: "top-right",
       });
+      setLoading(false)
       return;
     }
     if (pic.type === "image/jpeg" || pic.type === "image/png") {
