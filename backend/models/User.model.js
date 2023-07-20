@@ -4,7 +4,7 @@ const userModel = mongoose.Schema(
     {
         name: {type: String, required: true},
         email: {type: String, required: true,unique: true},
-        password: {type: String, required: true},
+        password: {type: String, required: true,select:false},
         pic: {type: String,default:"https://icons.veryicon.com/png/o/miscellaneous/two-color-icon-library/user-286.png"},
     },{
         timestamps: true
