@@ -13,6 +13,7 @@ import {
   MenuDivider,
   MenuItem,
   MenuList,
+  Spinner,
   Text,
   Tooltip,
   useDisclosure,
@@ -80,7 +81,9 @@ const SideDrawer = () => {
     }
   };
 
-  const accessChat = async (id) => {
+  const accessChat = async (userId) => {
+    console.log(userId);
+
     try {
       setLoadingChat(true);
       const config = {
@@ -89,18 +92,15 @@ const SideDrawer = () => {
           Authorization: `Bearer ${user.token}`,
         },
       };
+      const { data } = await axios.post(`http://127.0.0.1:5000/api/chat`, { userId }, config);
 
-      const { data } = await axios.get(
-        `http://127.0.0.1:5000/api/chat`,
-        { id },
-        config
-      );
+      if (!chats.find((c) => c._id === data._id)) setChats([data, ...chats]);
       setSelectedChat(data);
       setLoadingChat(false);
-      onClose()
+      onClose();
     } catch (error) {
       toast({
-        title: "Error fetching the chat !",
+        title: "Error fetching the chat",
         description: error.message,
         status: "error",
         duration: 5000,
@@ -182,6 +182,7 @@ const SideDrawer = () => {
                 />
               ))
             )}
+            {loadingChat && <Spinner ml={'auto'} display={'flex'} />}
           </DrawerBody>
         </DrawerContent>
       </Drawer>
