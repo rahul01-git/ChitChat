@@ -75,9 +75,16 @@ const GroupChatModal = ({ children }) => {
         },
       };
 
-      const {data} = await axios.post('http://127.0.0.1:5000/api/chat/group',{name: groupChatName,users: JSON.stringify(selectedUsers.map(u=>u._id))},config)
-      setChats([data,...chats])
-      onClose()
+      const { data } = await axios.post(
+        "http://127.0.0.1:5000/api/chat/group",
+        {
+          name: groupChatName,
+          users: JSON.stringify(selectedUsers.map((u) => u._id)),
+        },
+        config
+      );
+      setChats([data, ...chats]);
+      onClose();
       toast({
         title: "New Group Chat Created !",
         status: "success",
@@ -86,14 +93,14 @@ const GroupChatModal = ({ children }) => {
         position: "top",
       });
     } catch (error) {
-        toast({
-            title: "Failed to create Chat !",
-            description: error,
-            status: "error",
-            duration: 5000,
-            isClosable: true,
-            position: "top",
-          });
+      toast({
+        title: "Failed to create Chat !",
+        description: error,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "top",
+      });
     }
   };
   const handleDelete = (deletedUser) => {
