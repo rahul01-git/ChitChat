@@ -92,6 +92,7 @@ const Login = () => {
         width="100%"
         style={{ marginTop: 15 }}
         onClick={handleSubmit}
+        isLoading={loading}
       >
         Login
       </Button>
