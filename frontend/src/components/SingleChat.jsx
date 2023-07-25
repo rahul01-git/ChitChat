@@ -22,7 +22,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const toast = useToast();
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [newMessage, setNewMessage] = useState();
+  const [newMessage, setNewMessage] = useState("");
 
   const fetchMessages = async () => {
     if (!selectedChat) return;
@@ -39,7 +39,6 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         config
       );
       setMessages(data);
-      console.log(messages);
       setLoading(false);
     } catch (error) {
       toast({
@@ -77,7 +76,6 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           config
         );
 
-        console.log(data);
 
         setMessages([...messages, data]);
       } catch (error) {
