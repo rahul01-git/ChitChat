@@ -17,6 +17,8 @@ import { useEffect, useState } from "react";
 import "./Styles.css";
 import ScrollableChat from "./ScrollableChat";
 import io from "socket.io-client";
+import Lottie, {} from 'react-lottie'
+import animationData from '../animation/typing.json'
 
 const ENDPOINT = "http://localhost:5000";
 var socket, selectedChatCompare;
@@ -31,6 +33,15 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const [socketConnected, setSocketConnected] = useState(false);
   const [typing, setTyping] = useState(false)
   const [isTyping, setIsTyping] = useState(false)
+
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: animationData,
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice",
+    },
+  };
 
   const fetchMessages = async () => {
     if (!selectedChat) return;
@@ -206,7 +217,13 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             )}
 
             <FormControl onKeyDown={sendMessage} isRequired mt={3}>
-              {isTyping? <div>Loading...</div> : <></>}
+              {isTyping? <div>
+                <Lottie 
+                options={defaultOptions}
+                  width={70}
+                  style={{ marginBottom:15,marginLeft:0 }}
+                  />
+              </div> : <></>}
               <Input
                 variant={"filled"}
                 bg="#E0E0E0"
