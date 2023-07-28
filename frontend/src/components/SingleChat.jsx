@@ -16,6 +16,11 @@ import UpdateGroupChatModal from "./miscellaneous/UpdateGroupChatModal";
 import { useEffect, useState } from "react";
 import './Styles.css'
 import ScrollableChat from "./ScrollableChat";
+import io from 'socket.io-client'
+
+const ENDPOINT = 'http://localhost:5000'
+var socket, selectedChatCompare
+
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const { user, selectedChat, setSelectedChat } = ChatState();
 
@@ -23,6 +28,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [newMessage, setNewMessage] = useState("");
+  const [socketConnected,setSocketConnected] = useState(false)
 
   const fetchMessages = async () => {
     if (!selectedChat) return;
@@ -90,6 +96,13 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       }
     }
   };
+
+  useEffect(()=>{
+    socket = io(ENDPOINT)
+    socket.emit("setup",user)
+    socket.on('connection',()=>setSocketConnected(true))
+  },[])
+
   const typingHandler = (e) => {
     setNewMessage(e.target.value);
     //  typing indicator logic

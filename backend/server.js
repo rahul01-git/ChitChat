@@ -25,4 +25,21 @@ app.use(notFound)
 app.use(errorHandler)
 
 const PORT = process.env.PORT || 6000
-app.listen(PORT, console.log(`Server is running at post ${PORT}`.yellow.bold))
+const server = app.listen(PORT, console.log(`Server is running at post ${PORT}`.yellow.bold))
+
+const io = require('socket.io')(server,{
+    pingTimeout: 60000,
+    cors:{
+        origin:  process.env.CLIENT_PORT
+    }
+})
+
+io.on('connection',(socket)=>{
+    console.log('connected to socket.io');
+
+    socket.on('setup', (userData)=>{
+        socket.join(userData._id)
+        console.log(userData._id);
+        socket.emit('connected')
+    })
+})
