@@ -17,22 +17,22 @@ import { useEffect, useState } from "react";
 import "./Styles.css";
 import ScrollableChat from "./ScrollableChat";
 import io from "socket.io-client";
-import Lottie, {} from 'react-lottie'
-import animationData from '../animation/typing.json'
+import Lottie from "react-lottie";
+import animationData from "../animation/typing.json";
 
 const ENDPOINT = "http://localhost:5000";
 var socket, selectedChatCompare;
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
-  const { user, selectedChat, setSelectedChat } = ChatState();
+  const { user, selectedChat, setSelectedChat, notification, setNotification } = ChatState();
 
   const toast = useToast();
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [newMessage, setNewMessage] = useState("");
   const [socketConnected, setSocketConnected] = useState(false);
-  const [typing, setTyping] = useState(false)
-  const [isTyping, setIsTyping] = useState(false)
+  const [typing, setTyping] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
 
   const defaultOptions = {
     loop: true,
@@ -77,8 +77,8 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     socket = io(ENDPOINT);
     socket.emit("setup", user);
     socket.on("connected", () => setSocketConnected(true));
-    socket.on('typing',()=>setIsTyping(true))
-    socket.on('stop typing', ()=>setIsTyping(false))
+    socket.on("typing", () => setIsTyping(true));
+    socket.on("stop typing", () => setIsTyping(false));
   }, []);
 
   useEffect(() => {
@@ -86,13 +86,17 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     selectedChatCompare = selectedChat;
   }, [selectedChat]);
 
+
   useEffect(() => {
     socket.on("message received", (newMessageReceived) => {
       if (
         !selectedChatCompare ||
         selectedChatCompare._id !== newMessageReceived.chat._id
       ) {
-        //give notification
+        if(!notification.includes(newMessageReceived)){
+          setNotification([newMessageReceived,...notification])
+          setFetchAgain(!fetchAgain)
+        }
       } else {
         setMessages([...messages, newMessageReceived]);
       }
@@ -101,7 +105,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
 
   const sendMessage = async (e) => {
     if (e.key === "Enter" && newMessage) {
-      socket.emit('stop typing',selectedChat._id)
+      socket.emit("stop typing", selectedChat._id);
       try {
         const config = {
           headers: {
@@ -137,23 +141,22 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
 
   const typingHandler = (e) => {
     setNewMessage(e.target.value);
-    //  typing indicator logic
-    if(!socketConnected) return
-    if(!typing){
-      setTyping(true)
-      socket.emit('typing',selectedChat._id)
+    if (!socketConnected) return;
+    if (!typing) {
+      setTyping(true);
+      socket.emit("typing", selectedChat._id);
     }
-    let lastTypingTime = new Date().getTime()
-    var timerLength = 3000
-    setTimeout(()=>{
-      var timeNow = new Date().getTime()
-      var timeDiff = timeNow - lastTypingTime
+    let lastTypingTime = new Date().getTime();
+    var timerLength = 3000;
+    setTimeout(() => {
+      var timeNow = new Date().getTime();
+      var timeDiff = timeNow - lastTypingTime;
 
-      if(timeDiff >= timerLength && typing){
-        socket.emit('stop typing', selectedChat._id)
-        setTyping(false)
+      if (timeDiff >= timerLength && typing) {
+        socket.emit("stop typing", selectedChat._id);
+        setTyping(false);
       }
-    },timerLength)
+    }, timerLength);
   };
 
   return (
@@ -217,13 +220,17 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             )}
 
             <FormControl onKeyDown={sendMessage} isRequired mt={3}>
-              {isTyping? <div>
-                <Lottie 
-                options={defaultOptions}
-                  width={70}
-                  style={{ marginBottom:15,marginLeft:0 }}
+              {isTyping ? (
+                <div>
+                  <Lottie
+                    options={defaultOptions}
+                    width={70}
+                    style={{ marginBottom: 15, marginLeft: 0 }}
                   />
-              </div> : <></>}
+                </div>
+              ) : (
+                <></>
+              )}
               <Input
                 variant={"filled"}
                 bg="#E0E0E0"

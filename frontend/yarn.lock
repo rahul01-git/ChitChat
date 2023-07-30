@@ -2576,6 +2576,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"core-js@npm:3":
+  version: 3.32.0
+  resolution: "core-js@npm:3.32.0"
+  checksum: 52921395028550e4c9d21d47b9836439bb5b6b9eefc34d45a3948a68d81fdd093acc0fadf69f9cf632b82f01f95f22f484408a93dd9e940b19119ac204cd2925
+  languageName: node
+  linkType: hard
+
 "core-js@npm:^2.4.0":
   version: 2.6.12
   resolution: "core-js@npm:2.6.12"
@@ -3283,6 +3290,7 @@ __metadata:
     react: ^18.2.0
     react-dom: ^18.2.0
     react-lottie: ^1.2.3
+    react-notification-badge: ^1.5.1
     react-router-dom: ^6.14.2
     react-scrollable-feed: ^1.3.2
     socket.io-client: ^4.7.1
@@ -4616,6 +4624,19 @@ __metadata:
   peerDependencies:
     react: ^0.14.7 || ^15.0.0 || ^16.0.0
   checksum: 05326e40b45cb1f52efe324386875858cec4725392d98033f767566c2f101bdbf59111a42108596ef63c96c897f13cf8d3c612e7a288d0dee3e1b7fb1a7911a2
+  languageName: node
+  linkType: hard
+
+"react-notification-badge@npm:^1.5.1":
+  version: 1.5.1
+  resolution: "react-notification-badge@npm:1.5.1"
+  dependencies:
+    core-js: 3
+  peerDependencies:
+    prop-types: ^15.7.2
+    react: ^16.8.6
+    react-dom: ^16.8.6
+  checksum: f6e07da020189622ad80b36fe7fd4232e44fd5e3ec205adf1004ff852d7f4a0c95f679d74d0b86b31a2d53dd398e8c7fc5ea30112fbe08823e6e8021c26ebf24
   languageName: node
   linkType: hard
 

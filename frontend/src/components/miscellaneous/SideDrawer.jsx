@@ -27,10 +27,20 @@ import { ChatState } from "../../Context/ChatProvider";
 import ProfileModal from "./ProfileModal";
 import { useNavigate } from "react-router-dom";
 import UserListItem from "../UserAvatar/UserListItem";
-
+import { getSender } from "../../config/ChatLogics";
+import NotificationBadge from "react-notification-badge";
+import {Effect} from "react-notification-badge";
+ 
 const SideDrawer = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { user,setSelectedChat,chats,setChats } = ChatState();
+  const {
+    user,
+    setSelectedChat,
+    chats,
+    setChats,
+    notification,
+    setNotification,
+  } = ChatState();
   const toast = useToast();
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
@@ -92,7 +102,11 @@ const SideDrawer = () => {
           Authorization: `Bearer ${user.token}`,
         },
       };
-      const { data } = await axios.post(`http://127.0.0.1:5000/api/chat`, { userId }, config);
+      const { data } = await axios.post(
+        `http://127.0.0.1:5000/api/chat`,
+        { userId },
+        config
+      );
 
       if (!chats.find((c) => c._id === data._id)) setChats([data, ...chats]);
       setSelectedChat(data);
@@ -134,9 +148,25 @@ const SideDrawer = () => {
         <div>
           <Menu>
             <MenuButton p={1}>
+              <NotificationBadge
+              count={notification.length}
+              effect={Effect.SCALE}
+              />
               <BellIcon fontSize={"2xl"} m={1} />
             </MenuButton>
-            {/* <MenuList></MenuList> */}
+            <MenuList pl={2}>
+              {!notification.length && 'No new messages'}
+              {
+                notification.map(notify=>(
+                  <MenuItem key={notify._id} onClick={()=>{
+                    setSelectedChat(notify.chat)
+                    setNotification(notification.filter(n=> n!== notify))
+                  }}>
+                    {notify.chat.isGroupChat? `New Message in ${notify.chat.chatName}` : `New Message from  ${getSender(user,notify.chat.users)}`}
+                  </MenuItem>
+                ))
+              }
+            </MenuList>
           </Menu>
           <Menu>
             <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
@@ -182,7 +212,7 @@ const SideDrawer = () => {
                 />
               ))
             )}
-            {loadingChat && <Spinner ml={'auto'} display={'flex'} />}
+            {loadingChat && <Spinner ml={"auto"} display={"flex"} />}
           </DrawerBody>
         </DrawerContent>
       </Drawer>
